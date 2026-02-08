@@ -1,18 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using noti.Services;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -25,12 +13,23 @@ namespace noti
     public sealed partial class NotiWindow : Window
     {
         private readonly RandomMessageService _service = new();
+        private DispatcherTimer _timer;
+
         public NotiWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            StartAutoNotifier();
         }
 
-        private void OnRandomClick(object sender, RoutedEventArgs e)
+        private void StartAutoNotifier()
+        {
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromMinutes(Random.Shared.Next(15, 31));
+            _timer.Tick += OnTimerTick;
+            _timer.Start();
+        }
+
+        private void OnTimerTick(object sender, object e)
         {
             MessageTextBlock.Text = _service.GetRandomMessage();
         }

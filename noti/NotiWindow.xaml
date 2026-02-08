@@ -16,13 +16,9 @@
 
         <TextBlock
             x:Name="MessageTextBlock"
-            Text="버튼을 눌러라"
+            Text="대기중..."
             FontSize="18"
             TextAlignment="Center" />
-
-        <Button
-            Content="오늘의 TMI"
-            Click="OnRandomClick"/>
 
     </StackPanel>
 </Window>
