@@ -1,6 +1,10 @@
-using System;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Windowing;
+using WinRT.Interop;
+using Windows.Graphics;
 using noti.Services;
+using Microsoft.UI;
+using System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -18,7 +22,28 @@ namespace noti
         public NotiWindow()
         {
             this.InitializeComponent();
+            SetupWidgetWindow();
             StartAutoNotifier();
+        }
+
+        private void SetupWidgetWindow()
+        {
+            var hWnd = WindowNative.GetWindowHandle(this);
+            var windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
+            var appWindow = AppWindow.GetFromWindowId(windowId);
+
+            appWindow.Resize(new SizeInt32(260, 120));
+            appWindow.Move(new PointInt32(1600, 40));
+            
+            if (appWindow.Presenter is OverlappedPresenter presenter)
+            {
+                presenter.SetBorderAndTitleBar(false, false);
+                presenter.IsResizable = false;
+                presenter.IsAlwaysOnTop = true;
+            }
+
+            this.ExtendsContentIntoTitleBar = true;
+            this.SetTitleBar(null);
         }
 
         private void StartAutoNotifier()
@@ -31,7 +56,9 @@ namespace noti
 
         private void OnTimerTick(object sender, object e)
         {
-            MessageTextBlock.Text = _service.GetRandomMessage();
+            MessageText.Text = _service.GetRandomMessage();
+
+            _timer.Interval = TimeSpan.FromMinutes(Random.Shared.Next(15, 31));
         }
     }
 }

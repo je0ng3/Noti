@@ -9,16 +9,21 @@
     mc:Ignorable="d"
     Title="noti">
 
-    <StackPanel
-        Spacing="12"
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center">
+    <Grid Background="Transparent">
 
-        <TextBlock
-            x:Name="MessageTextBlock"
-            Text="대기중..."
-            FontSize="18"
-            TextAlignment="Center" />
+        <Border
+           Background="#AA1E1E1E"
+           CornerRadius="10"
+           Padding="20">
 
-    </StackPanel>
+            <TextBlock
+                x:Name="MessageText"
+                Text="=_="
+                FontSize="16"
+                Foreground="White"
+                TextAlignment="Center"/>
+            
+        </Border>
+
+    </Grid>
 </Window>
