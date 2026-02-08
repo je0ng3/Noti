@@ -23,11 +23,9 @@ namespace noti.Services
          
         };
 
-        private readonly Random _random = new();
-
         public string GetRandomMessage()
         {
-            int index = _random.Next(_messages.Count);
+            int index = Random.Shared.Next(_messages.Count);
             return _messages[index];
         }
     }

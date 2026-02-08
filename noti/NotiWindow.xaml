@@ -9,7 +9,8 @@
     mc:Ignorable="d"
     Title="noti">
 
-    <Grid Background="Transparent">
+    <Grid Background="Transparent"
+          Tapped="OnWidgetClicked">
 
         <Border
            Background="#AA1E1E1E"
