@@ -12,19 +12,62 @@
     <Grid Background="Transparent"
           Tapped="OnWidgetClicked">
 
-        <Border
-           Background="#AA1E1E1E"
-           CornerRadius="10"
-           Padding="20">
+        <Grid x:Name="SpiderPanel"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top"
+              Margin="0,0,20,0">
 
-            <TextBlock
-                x:Name="MessageText"
-                Text="=_="
-                FontSize="16"
-                Foreground="White"
-                TextAlignment="Center"/>
-            
-        </Border>
+            <Grid.RenderTransform>
+                <TranslateTransform x:Name="SpiderTranslate" Y="-350"/>
+            </Grid.RenderTransform>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Spider web thread + spider -->
+            <StackPanel Grid.Row="0"
+                        HorizontalAlignment="Center">
+                <!-- Web thread line -->
+                <Border Background="Transparent"
+                        Width="20"
+                        Height="45"
+                        HorizontalAlignment="Center"/>
+                <!-- Spider image -->
+                <Image Source="Assets/spider.PNG"
+                       Width="100"
+                       Height="100"
+                       Margin="10,-50,-10,0"
+                       HorizontalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Speech bubble -->
+            <Grid Grid.Row="1"
+                  Margin="-230,-40,10,0"
+                  HorizontalAlignment="Center">
+                <!-- Bubble tail (triangle pointing right toward spider) -->
+                <Polygon Points="0,0 10,8 0,16"
+                         Fill="#EE1E1E1E"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Top"
+                         Margin="0,12,-6,0"/>
+                <!-- Bubble body -->
+                <Border Background="#EE1E1E1E"
+                        CornerRadius="10"
+                        Padding="14,10"
+                        HorizontalAlignment="Left"
+                        MaxWidth="160">
+                    <TextBlock x:Name="MessageText"
+                               Text="=_="
+                               FontSize="13"
+                               Foreground="White"
+                               TextWrapping="Wrap"
+                               TextAlignment="Center"/>
+                </Border>
+            </Grid>
+
+        </Grid>
 
     </Grid>
 </Window>

@@ -1,31 +1,32 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Windowing;
+using WinRT;
 using WinRT.Interop;
 using Windows.Graphics;
 using noti.Services;
 using Microsoft.UI;
 using System;
 using Microsoft.UI.Xaml.Input;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 
 namespace noti
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class NotiWindow : Window
     {
         private readonly RandomMessageService _service = new();
         private DispatcherTimer _timer;
         private bool _isVisible = false;
         private AppWindow _appWindow;
+        private Storyboard _slideDownStoryboard;
+        private Storyboard _slideUpStoryboard;
+        private TranslateTransform _spiderTranslate;
 
         public NotiWindow()
         {
             this.InitializeComponent();
             SetupWidgetWindow();
+            SetupAnimation();
             StartAutoNotifier();
             _appWindow.Hide();
 
@@ -42,18 +43,17 @@ namespace noti
             var windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
             _appWindow = AppWindow.GetFromWindowId(windowId);
 
-            var widgetWidth = 260;
-            var widgetHeight = 120;
-            var margin = 40;
+            var widgetWidth = 350;
+            var widgetHeight = 150;
 
             _appWindow.Resize(new SizeInt32(widgetWidth, widgetHeight));
 
             var displayArea = DisplayArea.GetFromWindowId(windowId, DisplayAreaFallback.Primary);
             var workArea = displayArea.WorkArea;
-            var x = workArea.X + workArea.Width - widgetWidth - margin;
-            var y = workArea.Y + margin;
+            var x = workArea.X + workArea.Width - widgetWidth - 20;
+            var y = workArea.Y;
             _appWindow.Move(new PointInt32(x, y));
-            
+
             if (_appWindow.Presenter is OverlappedPresenter presenter)
             {
                 presenter.SetBorderAndTitleBar(false, false);
@@ -63,13 +63,54 @@ namespace noti
 
             this.ExtendsContentIntoTitleBar = true;
             this.SetTitleBar(null);
+
+        }
+
+        private void SetupAnimation()
+        { 
+            _spiderTranslate = (TranslateTransform)SpiderPanel.RenderTransform;
+
+            var animation = new DoubleAnimation
+            {
+                From = -350,
+                To = 0,
+                Duration = new Duration(TimeSpan.FromMilliseconds(800)),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+
+            Storyboard.SetTarget(animation, _spiderTranslate);
+            Storyboard.SetTargetProperty(animation, "Y");
+
+            _slideDownStoryboard = new Storyboard();
+            _slideDownStoryboard.Children.Add(animation);
+
+            // Slide up animation (0 -> -350)
+            var slideUpAnimation = new DoubleAnimation
+            {
+                From = 0,
+                To = -350,
+                Duration = new Duration(TimeSpan.FromMilliseconds(600)),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+            };
+
+            Storyboard.SetTarget(slideUpAnimation, _spiderTranslate);
+            Storyboard.SetTargetProperty(slideUpAnimation, "Y");
+
+            _slideUpStoryboard = new Storyboard();
+            _slideUpStoryboard.Children.Add(slideUpAnimation);
+            _slideUpStoryboard.Completed += OnSlideUpCompleted;
+        }
+
+        private void OnSlideUpCompleted(object sender, object e)
+        {
+            _appWindow.Hide();
+            _isVisible = false;
         }
 
         private void StartAutoNotifier()
         {
             _timer = new DispatcherTimer();
-            //_timer.Interval = TimeSpan.FromMinutes(Random.Shared.Next(15, 31));
-            _timer.Interval = TimeSpan.FromSeconds(10); // For testing purposes
+            _timer.Interval = TimeSpan.FromMinutes(Random.Shared.Next(15, 31));
             _timer.Tick += OnTimerTick;
             _timer.Start();
         }
@@ -80,8 +121,9 @@ namespace noti
 
             if (!_isVisible)
             {
+                _spiderTranslate.Y = -350;
                 _appWindow.Show();
-                this.Activate();
+                _slideDownStoryboard.Begin();
                 _isVisible = true;
             }
 
@@ -90,8 +132,10 @@ namespace noti
 
         private void OnWidgetClicked(object sender, TappedRoutedEventArgs e)
         {
-            _appWindow.Hide();
-            _isVisible = false;
+            if (!_isVisible) return;
+            _slideDownStoryboard.Stop();
+            _slideUpStoryboard.Begin();
         }
+
     }
 }
