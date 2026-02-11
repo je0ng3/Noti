@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window
+<winuiex:WindowEx
     x:Class="noti.NotiWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:noti"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:winuiex="using:WinUIEx"
     mc:Ignorable="d"
-    Title="noti">
+    Title="noti"
+    IsResizable="False"
+    IsAlwaysOnTop="True"
+    IsTitleBarVisible="False"
+    Width="350"
+    Height="150">
 
     <Grid Background="Transparent"
           Tapped="OnWidgetClicked">
@@ -38,13 +44,13 @@
                 <Image Source="Assets/spider.PNG"
                        Width="100"
                        Height="100"
-                       Margin="10,-50,-10,0"
+                       Margin="10,-40,30,-15"
                        HorizontalAlignment="Center"/>
             </StackPanel>
 
             <!-- Speech bubble -->
             <Grid Grid.Row="1"
-                  Margin="-230,-40,10,0"
+                  Margin="-230,-40,20,0"
                   HorizontalAlignment="Center">
                 <!-- Bubble tail (triangle pointing right toward spider) -->
                 <Polygon Points="0,0 10,8 0,16"
@@ -70,4 +76,4 @@
         </Grid>
 
     </Grid>
-</Window>
+</winuiex:WindowEx>
