@@ -25,7 +25,10 @@ namespace noti
             SetupWidgetWindow();
             SetupAnimation();
             StartAutoNotifier();
-            this.Hide();
+
+            this.SystemBackdrop = new WinUIEx.TransparentTintBackdrop();
+            this.AppWindow.SetPresenter(AppWindowPresenterKind.CompactOverlay);
+            this.Hide();   
 
             this.Closed += (s, e) =>
             {
@@ -38,9 +41,9 @@ namespace noti
         {
             var displayArea = DisplayArea.GetFromWindowId(this.AppWindow.Id, DisplayAreaFallback.Primary);
             var workArea = displayArea.WorkArea;
-            var x = workArea.X + workArea.Width - 350 - 20;
+            var x = workArea.X + workArea.Width - 350 -30;
             var y = workArea.Y;
-            this.MoveAndResize(x, y, 350, 150);
+            this.MoveAndResize(x, y, 250, 50);
         }
 
         private void SetupAnimation()

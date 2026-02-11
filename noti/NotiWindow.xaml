@@ -44,13 +44,13 @@
                 <Image Source="Assets/spider.PNG"
                        Width="100"
                        Height="100"
-                       Margin="10,-40,30,-15"
+                       Margin="10,-40,70,-15"
                        HorizontalAlignment="Center"/>
             </StackPanel>
 
             <!-- Speech bubble -->
             <Grid Grid.Row="1"
-                  Margin="-230,-40,20,0"
+                  Margin="-230,-40,70,0"
                   HorizontalAlignment="Center">
                 <!-- Bubble tail (triangle pointing right toward spider) -->
                 <Polygon Points="0,0 10,8 0,16"
